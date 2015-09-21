@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace ErgometerLibrary
 {
-    public class Class1
+    class FileHandler
     {
+
     }
 }
