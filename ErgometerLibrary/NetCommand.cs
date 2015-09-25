@@ -62,7 +62,7 @@ namespace ErgometerLibrary
             IsDoctor = doctor;
         }
 
-        public NetCommand Parse(string command)
+        public static NetCommand Parse(string command)
         {
             string[] com = command.Split('»');
 
@@ -92,13 +92,13 @@ namespace ErgometerLibrary
             }
         }
 
-        private NetCommand ParseSession(int session)
+        private static NetCommand ParseSession(int session)
         {
             NetCommand temp = new NetCommand(CommandType.SESSION, session);
             return temp;
         }
 
-        private NetCommand ParseLogoutRequest(int session, string[] args)
+        private static NetCommand ParseLogoutRequest(int session, string[] args)
         {
             if (args.Length != 1)
                 throw new MissingFieldException("Error in NetCommand: Logout Request is missing arguments");
@@ -110,7 +110,7 @@ namespace ErgometerLibrary
             return temp;
         }
 
-        private NetCommand ParseChatMessage(int session, string[] args)
+        private static NetCommand ParseChatMessage(int session, string[] args)
         {
             if (args.Length != 1)
                 throw new MissingFieldException("Error in NetCommand: Chat Message is missing arguments");
@@ -121,7 +121,7 @@ namespace ErgometerLibrary
             return temp;
         }
 
-        private NetCommand ParseData(int session, string[] args)
+        private static NetCommand ParseData(int session, string[] args)
         {
             if (args.Length != 9)
                 throw new MissingFieldException("Error in NetCommand: Data is missing arguments");
@@ -132,7 +132,7 @@ namespace ErgometerLibrary
             return temp;
         }
 
-        private NetCommand ParseLoginRequest(int session, string[] args)
+        private static NetCommand ParseLoginRequest(int session, string[] args)
         {
             bool doctor = bool.Parse(args[1]);
             if (doctor && args.Length != 5)
