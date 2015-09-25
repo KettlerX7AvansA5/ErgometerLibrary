@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ErgometerLibrary
 {
-    class NetCommand
+    public class NetCommand
     {
         public enum CommandType { LOGIN, DATA, CHAT, LOGOUT };
 
