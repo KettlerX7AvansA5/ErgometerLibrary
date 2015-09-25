@@ -8,7 +8,7 @@ namespace ErgometerLibrary
 {
     public class NetCommand
     {
-        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT };
+        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION };
 
 
         public double Timestamp { get; set; }
@@ -20,6 +20,12 @@ namespace ErgometerLibrary
         public string ChatMessage { get; set; }
         public Meting Meting { get; set; }
 
+        public NetCommand(int session)
+        {
+            Type = CommandType.SESSION;
+            Session = session;
+            Timestamp = (DateTime.Now - DateTime.Parse("1/1/1870 0:0:0")).TotalMilliseconds;
+        }
 
         public NetCommand(CommandType commandtype, int session)
         {
@@ -79,9 +85,17 @@ namespace ErgometerLibrary
                     return ParseChatMessage(session, args);
                 case 4:
                     return ParseLogoutRequest(session, args);
+                case 5:
+                    return ParseSession(session);
                 default:
                     throw new FormatException("Error in NetCommand: " + comType + " is not a valid command type.");
             }
+        }
+
+        private NetCommand ParseSession(int session)
+        {
+            NetCommand temp = new NetCommand(CommandType.SESSION, session);
+            return temp;
         }
 
         private NetCommand ParseLogoutRequest(int session, string[] args)
@@ -152,6 +166,9 @@ namespace ErgometerLibrary
                     break;
                 case CommandType.LOGOUT:
                     command += "4»ses" + Session + "»logout";
+                    break;
+                case CommandType.SESSION:
+                    command += "5»ses" + Session;
                     break;
 
                 default:
