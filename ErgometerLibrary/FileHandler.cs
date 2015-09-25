@@ -42,7 +42,7 @@ namespace ErgometerLibrary
             File.Create(Path.Combine(GetSessionFolder(session), "metingen.ergo"));
             File.Create(Path.Combine(GetSessionFolder(session), "chat.log"));
 
-            File.WriteAllText()
+            File.WriteAllText(GetSessionFile(session), naam);
         }
 
         private static string GetSessionFolder(int session)
