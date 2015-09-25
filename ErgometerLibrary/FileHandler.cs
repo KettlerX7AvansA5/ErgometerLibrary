@@ -35,7 +35,7 @@ namespace ErgometerLibrary
             return sessionID;
         }
 
-        public static void CreateSession(string naam, int session)
+        public static void CreateSession(int session, string naam)
         {
             Directory.CreateDirectory(GetSessionFolder(session));
             File.Create(Path.Combine(GetSessionFolder(session), "session.prop"));
@@ -43,6 +43,16 @@ namespace ErgometerLibrary
             File.Create(Path.Combine(GetSessionFolder(session), "chat.log"));
 
             File.WriteAllText(GetSessionFile(session), naam);
+        }
+
+        public static void AddMeting(int session, params Meting[] metingen)
+        {
+
+        }
+
+        public static void AddChat(int session, string name, string chatmessage)
+        {
+
         }
 
         private static string GetSessionFolder(int session)
