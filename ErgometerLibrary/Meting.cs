@@ -67,11 +67,12 @@ namespace ErgometerLibrary
 
         public static Meting Parse(string input, char delimiter)
         {
-            String[] status = input.Split(delimiter);
-
-            if (status.Length != 8 || status.Length != 9)
+            string[] status = input.Split(delimiter);
+            Console.WriteLine(status.Length);
+            if (status.Length != 8 && status.Length != 9)
+            {
                 return null;
-
+            }
             int heartbeat = int.Parse(status[0]);
             int rpm = int.Parse(status[1]);
             double speed = double.Parse(status[2]) / 10;
