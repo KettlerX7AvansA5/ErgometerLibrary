@@ -73,8 +73,11 @@ namespace ErgometerLibrary
             else
                 throw new FormatException("Error in NetCommend: " + com[1] + " is not a valid session.");
 
-            string[] args = com;
-            Array.Clear(args, 0, 2);
+            string[] args = new string[9];
+            for (int i = 2; i < com.Length; i++)
+            {
+                args[i - 2] = com[i];
+            }
 
             switch (comType)
             {
@@ -135,17 +138,17 @@ namespace ErgometerLibrary
 
         private static NetCommand ParseLoginRequest(int session, string[] args)
         {
-            bool doctor = bool.Parse(args[3]);
-            if (doctor && args.Length != 5)
+            bool doctor = bool.Parse(args[1]);
+            if (doctor && args.Length != 3)
                 throw new MissingFieldException("Error in NetCommand: Doctor login is missing arguments");
-            else if(args.Length != 4)
+            else if (args.Length != 2)
                 throw new MissingFieldException("Error in NetCommand: Client login is missing arguments");
 
             NetCommand temp = new NetCommand(CommandType.LOGIN, session);
             temp.IsDoctor = doctor;
-            temp.DisplayName = args[2];
+            temp.DisplayName = args[0];
             if (doctor)
-                temp.Password = args[4];
+                temp.Password = args[2];
 
             return temp;
         }
@@ -154,7 +157,7 @@ namespace ErgometerLibrary
         {
             string command = "";
 
-            switch(Type)
+            switch (Type)
             {
                 case CommandType.LOGIN:
                     command += "1»ses" + Session + "»" + DisplayName + "»" + IsDoctor + (IsDoctor ? "»" + Password : "");
