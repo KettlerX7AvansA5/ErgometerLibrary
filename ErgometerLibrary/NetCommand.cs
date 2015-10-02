@@ -139,16 +139,13 @@ namespace ErgometerLibrary
         private static NetCommand ParseLoginRequest(int session, string[] args)
         {
             bool doctor = bool.Parse(args[1]);
-            if (doctor && args.Length != 3)
+            if (args.Length != 3)
                 throw new MissingFieldException("Error in NetCommand: Doctor login is missing arguments");
-            else if (args.Length != 2)
-                throw new MissingFieldException("Error in NetCommand: Client login is missing arguments");
 
             NetCommand temp = new NetCommand(CommandType.LOGIN, session);
             temp.IsDoctor = doctor;
             temp.DisplayName = args[0];
-            if (doctor)
-                temp.Password = args[2];
+            temp.Password = args[2];
 
             return temp;
         }
@@ -160,7 +157,7 @@ namespace ErgometerLibrary
             switch (Type)
             {
                 case CommandType.LOGIN:
-                    command += "1»ses" + Session + "»" + DisplayName + "»" + IsDoctor + (IsDoctor ? "»" + Password : "");
+                    command += "1»ses" + Session + "»" + DisplayName + "»" + IsDoctor +  "»" + Password;
                     break;
                 case CommandType.DATA:
                     command += "2»ses" + Session + "»" + Meting.ToCommand();
