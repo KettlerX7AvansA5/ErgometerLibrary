@@ -88,7 +88,15 @@ namespace ErgometerLibrary
                 timestamp = Helper.Now;
 
             string[] temp = status[6].Split(':');
-            int seconds = (int.Parse(temp[0]) * 60) + (int.Parse(temp[1]));
+            int seconds = 0;
+            if (temp.Length == 2)
+            {
+                seconds = (int.Parse(temp[0]) * 60) + (int.Parse(temp[1]));
+            }
+            else
+            {
+                seconds = int.Parse(status[6]);
+            }
 
             return new Meting(heartbeat, rpm, speed, distance, power, energy, seconds, actualpower,timestamp);
         }

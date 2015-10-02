@@ -73,7 +73,7 @@ namespace ErgometerLibrary
             else
                 throw new FormatException("Error in NetCommend: " + com[1] + " is not a valid session.");
 
-            string[] args = new string[9];
+            string[] args = new string[com.Length-2];
             for (int i = 2; i < com.Length; i++)
             {
                 args[i - 2] = com[i];
