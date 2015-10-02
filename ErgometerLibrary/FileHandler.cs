@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ErgometerLibrary
 {
@@ -42,17 +40,26 @@ namespace ErgometerLibrary
             File.Create(Path.Combine(GetSessionFolder(session), "metingen.ergo"));
             File.Create(Path.Combine(GetSessionFolder(session), "chat.log"));
 
-            File.WriteAllText(GetSessionFile(session), naam);
+            File.WriteAllText(GetSessionFile(session), naam + "\n" + Helper.Now);
         }
 
-        public static void AddMeting(int session, params Meting[] metingen)
+        public static void WriteMetingen(int session, List<Meting> metingen)
         {
-
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(metingen);
+            File.WriteAllText(GetSessionMetingen(session), json);
+            Console.WriteLine("Writing metingen: " + GetSessionMetingen(session));
         }
 
-        public static void AddChat(int session, string name, string chatmessage)
+        public static void WriteChat(int session, List<ChatMessage> chat)
         {
+            string write = "";
+            foreach(ChatMessage c in chat)
+            {
+                write += c.ToString() + "\n";
+            }
 
+            File.WriteAllText(GetSessionChat(session), write);
+            Console.WriteLine("Writing chat: " + GetSessionChat(session));
         }
 
         private static string GetSessionFolder(int session)

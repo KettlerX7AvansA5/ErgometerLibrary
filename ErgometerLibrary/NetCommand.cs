@@ -24,21 +24,21 @@ namespace ErgometerLibrary
         {
             Type = CommandType.SESSION;
             Session = session;
-            Timestamp = (DateTime.Now - DateTime.Parse("1/1/1870 0:0:0")).TotalMilliseconds;
+            Timestamp = Helper.Now;
         }
 
         public NetCommand(CommandType commandtype, int session)
         {
             Type = commandtype;
             Session = session;
-            Timestamp = (DateTime.Now - DateTime.Parse("1/1/1870 0:0:0")).TotalMilliseconds;
+            Timestamp = Helper.Now;
         }
 
         public NetCommand(Meting m, int session)
         {
             Type = CommandType.DATA;
             Session = session;
-            Timestamp = (DateTime.Now - DateTime.Parse("1/1/1870 0:0:0")).TotalMilliseconds;
+            Timestamp = Helper.Now;
 
             Meting = m;
         }
@@ -47,7 +47,7 @@ namespace ErgometerLibrary
         {
             Type = CommandType.CHAT;
             Session = session;
-            Timestamp = (DateTime.Now - DateTime.Parse("1/1/1870 0:0:0")).TotalMilliseconds;
+            Timestamp = Helper.Now;
 
             ChatMessage = chat;
         }
@@ -56,7 +56,7 @@ namespace ErgometerLibrary
         {
             Type = CommandType.LOGIN;
             Session = session;
-            Timestamp = (DateTime.Now - DateTime.Parse("1/1/1870 0:0:0")).TotalMilliseconds;
+            Timestamp = Helper.Now;
 
             DisplayName = name;
             IsDoctor = doctor;

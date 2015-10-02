@@ -85,7 +85,7 @@ namespace ErgometerLibrary
             if (status.Length == 9)
                 timestamp = double.Parse(status[8]);
             else
-                timestamp = (DateTime.Now - DateTime.Parse("1/1/1870 0:0:0")).TotalMilliseconds;
+                timestamp = Helper.Now;
 
             string[] temp = status[6].Split(':');
             int seconds = (int.Parse(temp[0]) * 60) + (int.Parse(temp[1]));
