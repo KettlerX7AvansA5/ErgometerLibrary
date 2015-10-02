@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ErgometerLibrary
 {
-    class NetHelper
+    public class NetHelper
     {
         public static void SendNetCommand(TcpClient client, NetCommand command)
         {
