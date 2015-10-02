@@ -22,7 +22,7 @@ namespace ErgometerLibrary
             string[] existingSessions = Directory.GetDirectories(DataFolder);
 
             Random rand = new Random();
-            int sessionID = rand.Next(int.MinValue, int.MaxValue);
+            int sessionID = rand.Next(0, int.MaxValue);
 
 
             while (existingSessions.Contains(sessionID.ToString()))

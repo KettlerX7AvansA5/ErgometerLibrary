@@ -52,7 +52,7 @@ namespace ErgometerLibrary
             ChatMessage = chat;
         }
 
-        public NetCommand(string name, bool doctor, int session)
+        public NetCommand(string name, bool doctor, string password, int session)
         {
             Type = CommandType.LOGIN;
             Session = session;
@@ -60,11 +60,15 @@ namespace ErgometerLibrary
 
             DisplayName = name;
             IsDoctor = doctor;
+            Password = password;
         }
 
         public static NetCommand Parse(string command)
         {
             string[] com = command.Split('»');
+
+            Console.WriteLine(command);
+            Console.WriteLine(com[0]);
 
             int comType = int.Parse(com[0]);
             int session = 0;
