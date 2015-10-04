@@ -36,9 +36,6 @@ namespace ErgometerLibrary
         public static void CreateSession(int session, string naam)
         {
             Directory.CreateDirectory(GetSessionFolder(session));
-            File.Create(Path.Combine(GetSessionFolder(session), "session.prop"));
-            File.Create(Path.Combine(GetSessionFolder(session), "metingen.ergo"));
-            File.Create(Path.Combine(GetSessionFolder(session), "chat.log"));
 
             File.WriteAllText(GetSessionFile(session), naam + "\n" + Helper.Now);
         }
