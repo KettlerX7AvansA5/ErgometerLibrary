@@ -68,7 +68,6 @@ namespace ErgometerLibrary
         public static Meting Parse(string input, char delimiter)
         {
             string[] status = input.Split(delimiter);
-            Console.WriteLine(status.Length);
             if (status.Length != 8 && status.Length != 9)
             {
                 return null;

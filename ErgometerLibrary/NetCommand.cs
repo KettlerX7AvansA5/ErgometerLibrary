@@ -68,7 +68,6 @@ namespace ErgometerLibrary
             string[] com = command.Split('»');
 
             Console.WriteLine(command);
-            Console.WriteLine(com[0]);
 
             int comType = int.Parse(com[0]);
             int session = 0;
