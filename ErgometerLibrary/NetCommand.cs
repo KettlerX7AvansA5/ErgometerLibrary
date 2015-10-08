@@ -8,8 +8,8 @@ namespace ErgometerLibrary
 {
     public class NetCommand
     {
-        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION };
-
+        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, RESPONSE };
+        public enum ResponseType { LOGINOK, LOGINWRONG, ERROR, NOTLOGGEDIN }
 
         public double Timestamp { get; set; }
         public int Session { get; set; }
@@ -19,12 +19,21 @@ namespace ErgometerLibrary
         public string Password { get; set; }
         public string ChatMessage { get; set; }
         public Meting Meting { get; set; }
+        public ResponseType Response { get; set; }
 
         public NetCommand(int session)
         {
             Type = CommandType.SESSION;
             Session = session;
             Timestamp = Helper.Now;
+        }
+
+        public NetCommand(ResponseType response, int session)
+        {
+            Type = CommandType.RESPONSE;
+            Session = session;
+            Timestamp = Helper.Now;
+            Response = response;
         }
 
         public NetCommand(CommandType commandtype, int session)
@@ -94,8 +103,28 @@ namespace ErgometerLibrary
                     return ParseLogoutRequest(session, args);
                 case 5:
                     return ParseSession(session);
+                case 6:
+                    return ParseResponse(session, args);
                 default:
                     throw new FormatException("Error in NetCommand: " + comType + " is not a valid command type.");
+            }
+        }
+
+        private static NetCommand ParseResponse(int session, string[] args)
+        {
+            if (args.Length != 1)
+                throw new MissingFieldException("Error in NetCommand: Response is missing arguments");
+
+            switch(args[0])
+            {
+                case "loginok":
+                    return new NetCommand(ResponseType.LOGINOK, session);
+                case "loginwrong":
+                    return new NetCommand(ResponseType.LOGINWRONG, session);
+                case "notloggedin":
+                    return new NetCommand(ResponseType.NOTLOGGEDIN, session);
+                default:
+                    throw new FormatException("Error in NetCommand: Response type not recognised");
             }
         }
 
@@ -173,6 +202,9 @@ namespace ErgometerLibrary
                     break;
                 case CommandType.SESSION:
                     command += "5»ses" + Session;
+                    break;
+                case CommandType.RESPONSE:
+                    command += "6»ses" + Session + "»" + Response.ToString().ToLower();
                     break;
 
                 default:

@@ -22,7 +22,7 @@ namespace ErgometerLibrary
                 using (Stream stream = File.Open(UsersFile, FileMode.Create))
                 {
                     BinaryWriter writer = new BinaryWriter(stream);
-                    writer.Write(0);
+                    writer.Write(1);
                     writer.Write("doctor");
                     writer.Write("password");
                 }
