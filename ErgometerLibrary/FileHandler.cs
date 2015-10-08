@@ -8,15 +8,28 @@ namespace ErgometerLibrary
     public class FileHandler
     {
         public static string DataFolder { get; } = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "Ergometer");
+        public static string UsersFile { get; } = Path.Combine(DataFolder, "users.ergo");
 
-        public static void CheckDataFolder()
+        public static void CheckStorage()
         {
             if(! Directory.Exists(DataFolder))
             {
                 Directory.CreateDirectory(DataFolder);
             }
+
+            if(! File.Exists(UsersFile))
+            {
+                using (Stream stream = File.Open(UsersFile, FileMode.Create))
+                {
+                    BinaryWriter writer = new BinaryWriter(stream);
+                    writer.Write(0);
+                    writer.Write("doctor");
+                    writer.Write("password");
+                }
+            }
         }
 
+        //SESSION 
         public static int GenerateSession()
         {
             string[] existingSessions = Directory.GetDirectories(DataFolder);
@@ -36,6 +49,10 @@ namespace ErgometerLibrary
         public static void CreateSession(int session, string naam)
         {
             Directory.CreateDirectory(GetSessionFolder(session));
+
+            using (File.Create(Path.Combine(GetSessionFile(session)))) ;
+            using (File.Create(Path.Combine(GetSessionMetingen(session)))) ;
+            using (File.Create(Path.Combine(GetSessionChat(session)))) ;
 
             File.WriteAllText(GetSessionFile(session), naam + "\n" + Helper.Now);
         }
@@ -74,6 +91,41 @@ namespace ErgometerLibrary
         private static string GetSessionChat(int session)
         {
             return Path.Combine(DataFolder, session.ToString(), "chat.log");
+        }
+
+        //USER MANAGEMENT
+        public static Dictionary<string, string> LoadUsers()
+        {
+            Dictionary<string, string> users = new Dictionary<string, string>();
+
+            using (Stream stream = File.Open(UsersFile, FileMode.Open))
+            {
+                BinaryReader reader = new BinaryReader(stream);
+                int count = reader.ReadInt32();
+                for (int n = 0; n < count; n++)
+                {
+                    var key = reader.ReadString();
+                    var value = reader.ReadString();
+                    users.Add(key, value);
+                }
+            }
+
+            return users;
+        }
+
+        public static void SaveUsers(Dictionary<string, string> users)
+        {
+            using(Stream stream = File.Open(UsersFile, FileMode.Open))
+            {
+                BinaryWriter writer = new BinaryWriter(stream);
+                writer.Write(users.Count);
+                foreach (var kvp in users)
+                {
+                    writer.Write(kvp.Key);
+                    writer.Write(kvp.Value);
+                }
+                writer.Flush();
+            }
         }
     }
 }
