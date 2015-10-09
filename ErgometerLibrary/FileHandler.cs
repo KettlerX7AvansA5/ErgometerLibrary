@@ -23,7 +23,7 @@ namespace ErgometerLibrary
                 {
                     BinaryWriter writer = new BinaryWriter(stream);
                     writer.Write(1);
-                    writer.Write("p4tp140t");
+                    writer.Write("Doctor0tVfW");
                     writer.Write("password");
                 }
             }
@@ -55,6 +55,7 @@ namespace ErgometerLibrary
             using (File.Create(Path.Combine(GetSessionChat(session)))) ;
 
             File.WriteAllText(GetSessionFile(session), naam + Environment.NewLine + Helper.Now);
+            Console.WriteLine("Created session at " + Helper.MillisecondsToTime(Helper.Now));
         }
 
         public static void WriteMetingen(int session, List<Meting> metingen)
