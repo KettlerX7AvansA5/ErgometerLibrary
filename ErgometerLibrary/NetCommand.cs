@@ -17,7 +17,7 @@ namespace ErgometerLibrary
         public CommandType Type { get; set; }
         public ResponseType Response { get; set; }
         public ValueType Value { get; set; }
-        public double SetValue { get; set; }
+        public int SetValue { get; set; }
         public string DisplayName { get; set; }
         public bool IsDoctor { get; set; }
         public string Password { get; set; }
@@ -71,7 +71,7 @@ namespace ErgometerLibrary
         }
 
         //SETVALUE
-        public NetCommand(ValueType value, double val, int session)
+        public NetCommand(ValueType value, int val, int session)
         {
             Type = CommandType.VALUESET;
             Session = session;
@@ -167,13 +167,13 @@ namespace ErgometerLibrary
             switch (args[0])
             {
                 case "time":
-                    return new NetCommand(ValueType.TIME, double.Parse(args[1]), session);
+                    return new NetCommand(ValueType.TIME, int.Parse(args[1]), session);
                 case "power":
-                    return new NetCommand(ValueType.POWER, double.Parse(args[1]), session);
+                    return new NetCommand(ValueType.POWER, int.Parse(args[1]), session);
                 case "energy":
-                    return new NetCommand(ValueType.ENERGY, double.Parse(args[1]), session);
+                    return new NetCommand(ValueType.ENERGY, int.Parse(args[1]), session);
                 case "distance":
-                    return new NetCommand(ValueType.DISTANCE, double.Parse(args[1]), session);
+                    return new NetCommand(ValueType.DISTANCE, int.Parse(args[1]), session);
                 default:
                     throw new FormatException("Error in NetCommand: SetValue type not recognised");
             }

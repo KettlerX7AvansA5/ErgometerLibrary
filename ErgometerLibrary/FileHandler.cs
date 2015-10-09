@@ -54,7 +54,7 @@ namespace ErgometerLibrary
             using (File.Create(Path.Combine(GetSessionMetingen(session)))) ;
             using (File.Create(Path.Combine(GetSessionChat(session)))) ;
 
-            File.WriteAllText(GetSessionFile(session), naam + "\n" + Helper.Now);
+            File.WriteAllText(GetSessionFile(session), naam + Environment.NewLine + Helper.Now);
         }
 
         public static void WriteMetingen(int session, List<Meting> metingen)
