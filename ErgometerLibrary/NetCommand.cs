@@ -8,19 +8,24 @@ namespace ErgometerLibrary
 {
     public class NetCommand
     {
-        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, RESPONSE };
+        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, VALUESET, USER, RESPONSE };
         public enum ResponseType { LOGINOK, LOGINWRONG, ERROR, NOTLOGGEDIN }
+        public enum ValueType { TIME, POWER, ENERGY, DISTANCE }
 
         public double Timestamp { get; set; }
         public int Session { get; set; }
         public CommandType Type { get; set; }
+        public ResponseType Response { get; set; }
+        public ValueType Value { get; set; }
+        public double SetValue { get; set; }
         public string DisplayName { get; set; }
         public bool IsDoctor { get; set; }
         public string Password { get; set; }
         public string ChatMessage { get; set; }
         public Meting Meting { get; set; }
-        public ResponseType Response { get; set; }
-
+        public Dictionary<string, string> users;
+        
+        //SESSION
         public NetCommand(int session)
         {
             Type = CommandType.SESSION;
@@ -28,6 +33,7 @@ namespace ErgometerLibrary
             Timestamp = Helper.Now;
         }
 
+        //RESPONSE
         public NetCommand(ResponseType response, int session)
         {
             Type = CommandType.RESPONSE;
@@ -36,6 +42,7 @@ namespace ErgometerLibrary
             Response = response;
         }
 
+        //STANDARD
         public NetCommand(CommandType commandtype, int session)
         {
             Type = commandtype;
@@ -43,6 +50,7 @@ namespace ErgometerLibrary
             Timestamp = Helper.Now;
         }
 
+        //METING
         public NetCommand(Meting m, int session)
         {
             Type = CommandType.DATA;
@@ -52,6 +60,7 @@ namespace ErgometerLibrary
             Meting = m;
         }
 
+        //CHAT
         public NetCommand(string chat, int session)
         {
             Type = CommandType.CHAT;
@@ -61,6 +70,24 @@ namespace ErgometerLibrary
             ChatMessage = chat;
         }
 
+        //SETVALUE
+        public NetCommand(ValueType value, double val, int session)
+        {
+            Type = CommandType.VALUESET;
+            Session = session;
+            Value = value;
+            SetValue = val;
+        }
+
+        //USERS
+        public NetCommand(Dictionary<string, string> users, int session)
+        {
+            Type = CommandType.USER;
+            Session = session;
+            this.users = users;
+        }
+
+        //LOGIN
         public NetCommand(string name, bool doctor, string password, int session)
         {
             Type = CommandType.LOGIN;
@@ -105,8 +132,50 @@ namespace ErgometerLibrary
                     return ParseSession(session);
                 case 6:
                     return ParseResponse(session, args);
+                case 7:
+                    return ParseValue(session, args);
+                case 8:
+                    return ParseUsers(session, args);
                 default:
                     throw new FormatException("Error in NetCommand: " + comType + " is not a valid command type.");
+            }
+        }
+
+        private static NetCommand ParseUsers(int session, string[] args)
+        {
+            if (args.Length < 2)
+                throw new MissingFieldException("Error in NetCommand: Users is missing arguments");
+
+            Dictionary<string, string> users = new Dictionary<string, string>();
+
+            foreach(string str in args)
+            {
+                string[] temp = str.Split('|');
+                string name = temp[0];
+                string password = temp[1];
+                users.Add(name, password);
+            }
+
+            return new NetCommand(users, session);
+        }
+
+        private static NetCommand ParseValue(int session, string[] args)
+        {
+            if (args.Length != 2)
+                throw new MissingFieldException("Error in NetCommand: SetValue is missing arguments");
+
+            switch (args[0])
+            {
+                case "time":
+                    return new NetCommand(ValueType.TIME, double.Parse(args[1]), session);
+                case "power":
+                    return new NetCommand(ValueType.POWER, double.Parse(args[1]), session);
+                case "energy":
+                    return new NetCommand(ValueType.ENERGY, double.Parse(args[1]), session);
+                case "distance":
+                    return new NetCommand(ValueType.DISTANCE, double.Parse(args[1]), session);
+                default:
+                    throw new FormatException("Error in NetCommand: SetValue type not recognised");
             }
         }
 
@@ -170,14 +239,14 @@ namespace ErgometerLibrary
 
         private static NetCommand ParseLoginRequest(int session, string[] args)
         {
-            bool doctor = bool.Parse(args[1]);
+            bool doctor = bool.Parse(args[2]);
             if (args.Length != 3)
                 throw new MissingFieldException("Error in NetCommand: Doctor login is missing arguments");
 
             NetCommand temp = new NetCommand(CommandType.LOGIN, session);
             temp.IsDoctor = doctor;
             temp.DisplayName = args[0];
-            temp.Password = args[2];
+            temp.Password = args[1];
 
             return temp;
         }
@@ -189,7 +258,7 @@ namespace ErgometerLibrary
             switch (Type)
             {
                 case CommandType.LOGIN:
-                    command += "1»ses" + Session + "»" + DisplayName + "»" + IsDoctor +  "»" + Password;
+                    command += "1»ses" + Session + "»" + DisplayName +  "»" + Password + "»" + IsDoctor;
                     break;
                 case CommandType.DATA:
                     command += "2»ses" + Session + "»" + Meting.ToCommand();
@@ -205,6 +274,16 @@ namespace ErgometerLibrary
                     break;
                 case CommandType.RESPONSE:
                     command += "6»ses" + Session + "»" + Response.ToString().ToLower();
+                    break;
+                case CommandType.VALUESET:
+                    command += "7»ses" + Session + "»" + Value.ToString().ToLower() + "»" + SetValue;
+                    break;
+                case CommandType.USER:
+                    command += "8»ses" + Session;
+                    foreach(KeyValuePair<string, string> keys in users)
+                    {
+                        command += "»" + keys.Key + "|" + keys.Value;
+                    }
                     break;
 
                 default:
