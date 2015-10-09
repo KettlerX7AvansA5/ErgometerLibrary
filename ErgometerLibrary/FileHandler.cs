@@ -23,7 +23,7 @@ namespace ErgometerLibrary
                 {
                     BinaryWriter writer = new BinaryWriter(stream);
                     writer.Write(1);
-                    writer.Write("doctor");
+                    writer.Write("p4tp140t");
                     writer.Write("password");
                 }
             }
