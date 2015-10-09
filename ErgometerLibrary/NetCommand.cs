@@ -8,8 +8,8 @@ namespace ErgometerLibrary
 {
     public class NetCommand
     {
-        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, VALUESET, USER, RESPONSE, REQUEST };
-        public enum RequestType { USERS}
+        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, VALUESET, USER, RESPONSE, REQUEST }
+        public enum RequestType { USERS }
         public enum ResponseType { LOGINOK, LOGINWRONG, ERROR, NOTLOGGEDIN }
         public enum ValueType { TIME, POWER, ENERGY, DISTANCE }
 
@@ -42,6 +42,15 @@ namespace ErgometerLibrary
             Session = session;
             Timestamp = Helper.Now;
             Response = response;
+        }
+
+        //REQUEST
+        public NetCommand(RequestType request, int session)
+        {
+            Type = CommandType.REQUEST;
+            Session = session;
+            Timestamp = Helper.Now;
+            Request = request;
         }
 
         //STANDARD
@@ -138,8 +147,24 @@ namespace ErgometerLibrary
                     return ParseValue(session, args);
                 case 8:
                     return ParseUsers(session, args);
+                case 9:
+                    return ParseRequest(session, args);
                 default:
                     throw new FormatException("Error in NetCommand: " + comType + " is not a valid command type.");
+            }
+        }
+
+        private static NetCommand ParseRequest(int session, string[] args)
+        {
+            if (args.Length != 1)
+                throw new MissingFieldException("Error in NetCommand: Request is missing arguments");
+
+            switch (args[0])
+            {
+                case "users":
+                    return new NetCommand(ResponseType.LOGINOK, session);
+                default:
+                    throw new FormatException("Error in NetCommand: Request type not recognised");
             }
         }
 
@@ -286,6 +311,9 @@ namespace ErgometerLibrary
                     {
                         command += "»" + keys.Key + "|" + keys.Value;
                     }
+                    break;
+                case CommandType.REQUEST:
+                    command += "9»ses" + Session + "»" + Request.ToString().ToLower();
                     break;
 
                 default:
