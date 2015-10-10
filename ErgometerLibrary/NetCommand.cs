@@ -9,7 +9,7 @@ namespace ErgometerLibrary
     public class NetCommand
     {
         public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, VALUESET, USER, RESPONSE, REQUEST }
-        public enum RequestType { USERS }
+        public enum RequestType { USERS, ALLSESSIONS, CURRENTSESSIONS, OLDDATA, SESSIONDATA }
         public enum ResponseType { LOGINOK, LOGINWRONG, ERROR, NOTLOGGEDIN }
         public enum ValueType { TIME, POWER, ENERGY, DISTANCE }
 

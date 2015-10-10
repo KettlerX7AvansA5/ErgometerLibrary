@@ -65,6 +65,13 @@ namespace ErgometerLibrary
             Console.WriteLine("Writing metingen: " + GetSessionMetingen(session));
         }
 
+        public static List<Meting> ReadMetingen(int session)
+        {
+            object metingString = Newtonsoft.Json.JsonConvert.DeserializeObject(GetSessionMetingen(session));
+            Console.WriteLine("Reading metingen: " + GetSessionMetingen(session));
+            return (List<Meting>) metingString;
+        }
+
         public static void WriteChat(int session, List<ChatMessage> chat)
         {
             string write = "";
