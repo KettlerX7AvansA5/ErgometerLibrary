@@ -162,7 +162,15 @@ namespace ErgometerLibrary
             switch (args[0])
             {
                 case "users":
-                    return new NetCommand(ResponseType.LOGINOK, session);
+                    return new NetCommand(RequestType.USERS, session);
+                case "allsessions":
+                    return new NetCommand(RequestType.ALLSESSIONS, session);
+                case "currentsessions":
+                    return new NetCommand(RequestType.CURRENTSESSIONS, session);
+                case "olddata":
+                    return new NetCommand(RequestType.OLDDATA, session);
+                case "sessiondata":
+                    return new NetCommand(RequestType.SESSIONDATA, session);
                 default:
                     throw new FormatException("Error in NetCommand: Request type not recognised");
             }
