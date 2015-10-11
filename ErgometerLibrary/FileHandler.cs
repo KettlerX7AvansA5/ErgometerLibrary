@@ -72,6 +72,17 @@ namespace ErgometerLibrary
             return (List<Meting>) metingString;
         }
 
+        public static int[] GetAllSessions()
+        {
+            string[] directories = Directory.GetDirectories(DataFolder);
+            int[] sessions = new int[directories.Length];
+            for (int i = 0; i < directories.Length; i++)
+            {
+                sessions[i] = int.Parse(directories[i]);
+            }
+            return sessions;
+        }
+
         public static void WriteChat(int session, List<ChatMessage> chat)
         {
             string write = "";
