@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Text;
 
@@ -26,7 +27,7 @@ namespace ErgometerLibrary
             client.GetStream().Flush();
             */
 
-            StreamWriter wr = new StreamWriter(client.GetStream(), Encoding.Unicode);
+            StreamWriter wr = new StreamWriter(new SslStream(client.GetStream(), false), Encoding.Unicode);
             wr.WriteLine(command);
             Console.WriteLine("sent " + command);
             wr.Flush();
@@ -56,7 +57,7 @@ namespace ErgometerLibrary
             return response;
             */
 
-            StreamReader rd = new StreamReader(client.GetStream(), Encoding.Unicode);
+            StreamReader rd = new StreamReader(new SslStream(client.GetStream(), false), Encoding.Unicode);
             string str = rd.ReadLine();
             Console.WriteLine("rec " + str);
             return str;
