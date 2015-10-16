@@ -66,6 +66,8 @@ namespace ErgometerLibrary
                 Console.WriteLine("rec " + str);
                 return str;
             }
+            else
+                return "";
         }
 
         public static IPAddress GetIP(string ipstring)
