@@ -27,10 +27,13 @@ namespace ErgometerLibrary
             client.GetStream().Flush();
             */
 
-            StreamWriter wr = new StreamWriter(client.GetStream(), Encoding.Unicode);
-            wr.WriteLine(command);
-            Console.WriteLine("sent " + command);
-            wr.Flush();
+            if (client.Connected)
+            {
+                StreamWriter wr = new StreamWriter(client.GetStream(), Encoding.Unicode);
+                wr.WriteLine(command);
+                Console.WriteLine("sent " + command);
+                wr.Flush();
+            }
         }
 
         public static NetCommand ReadNetCommand(TcpClient client)
@@ -56,11 +59,13 @@ namespace ErgometerLibrary
             string response = Encoding.Unicode.GetString(bytesFrom);
             return response;
             */
-
-            StreamReader rd = new StreamReader(client.GetStream(), Encoding.Unicode);
-            string str = rd.ReadLine();
-            Console.WriteLine("rec " + str);
-            return str;
+            if (client.Connected)
+            {
+                StreamReader rd = new StreamReader(client.GetStream(), Encoding.Unicode);
+                string str = rd.ReadLine();
+                Console.WriteLine("rec " + str);
+                return str;
+            }
         }
 
         public static IPAddress GetIP(string ipstring)
