@@ -124,7 +124,7 @@ namespace ErgometerLibrary
         {
             Type = CommandType.LOGIN;
             Session = session;
-            Timestamp = Helper.Now;
+            Timestamp = Helper.Now;//wtf is dit voor pure aids??????????
 
             DisplayName = name;
             IsDoctor = doctor;
@@ -142,7 +142,7 @@ namespace ErgometerLibrary
             if (com[1].StartsWith("ses"))
                 session = int.Parse(com[1].Substring(3));
             else
-                throw new FormatException("Error in NetCommend: " + com[1] + " is not a valid session.");
+                throw new FormatException("Error in NetCommand: " + com[1] + " is not a valid session.");
 
             string[] args = new string[com.Length-2];
             for (int i = 2; i < com.Length; i++)
