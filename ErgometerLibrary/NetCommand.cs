@@ -124,7 +124,7 @@ namespace ErgometerLibrary
         {
             Type = CommandType.LOGIN;
             Session = session;
-            Timestamp = Helper.Now;//wtf is dit voor pure aids??????????
+            Timestamp = Helper.Now;
 
             DisplayName = name;
             IsDoctor = doctor;
