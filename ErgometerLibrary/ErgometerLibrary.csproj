@@ -53,7 +53,6 @@
     <Compile Include="Helper.cs" />
     <Compile Include="NetCommand.cs" />
     <Compile Include="ComPort.cs" />
-    <Compile Include="FileHandler.cs" />
     <Compile Include="Meting.cs" />
     <Compile Include="NetHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

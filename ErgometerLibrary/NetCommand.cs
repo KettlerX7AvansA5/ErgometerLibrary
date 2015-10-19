@@ -8,11 +8,11 @@ namespace ErgometerLibrary
 {
     public class NetCommand
     {
-        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, VALUESET, USER, RESPONSE, REQUEST, LENGTH, SESSIONDATA }
+        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, VALUESET, USER, RESPONSE, REQUEST, LENGTH, SESSIONDATA, ERROR }
         public enum RequestType { USERS, ALLSESSIONS, CURRENTSESSIONS, OLDDATA, SESSIONDATA }
         public enum ResponseType { LOGINOK, LOGINWRONG, ERROR, NOTLOGGEDIN }
         public enum ValueType { TIME, POWER, ENERGY, DISTANCE }
-        public enum LengthType { USERS, SESSIONS, SESSIONDATA, DATA, CURRENTSESSIONS}
+        public enum LengthType { USERS, SESSIONS, SESSIONDATA, DATA, CURRENTSESSIONS }
 
         public double Timestamp { get; set; }
         public int Session { get; set; }
@@ -28,7 +28,7 @@ namespace ErgometerLibrary
         public string ChatMessage { get; set; }
         public Meting Meting { get; set; }
         public int LengthValue { get; set; }
-        
+
         //SESSION
         public NetCommand(int session)
         {
@@ -135,16 +135,23 @@ namespace ErgometerLibrary
         {
             string[] com = command.Split('»');
 
-            Console.WriteLine(command);
+            int comType = 0;
+            try
+            {
+                comType = int.Parse(com[0]);
+            }
+            catch(Exception e)
+            {
+                return new NetCommand(CommandType.ERROR, 0);
+            }
 
-            int comType = int.Parse(com[0]);
             int session = 0;
             if (com[1].StartsWith("ses"))
                 session = int.Parse(com[1].Substring(3));
             else
                 throw new FormatException("Error in NetCommand: " + com[1] + " is not a valid session.");
 
-            string[] args = new string[com.Length-2];
+            string[] args = new string[com.Length - 2];
             for (int i = 2; i < com.Length; i++)
             {
                 args[i - 2] = com[i];
@@ -268,7 +275,7 @@ namespace ErgometerLibrary
             if (args.Length != 1)
                 throw new MissingFieldException("Error in NetCommand: Response is missing arguments");
 
-            switch(args[0])
+            switch (args[0])
             {
                 case "loginok":
                     return new NetCommand(ResponseType.LOGINOK, session);
@@ -344,7 +351,7 @@ namespace ErgometerLibrary
             switch (Type)
             {
                 case CommandType.LOGIN:
-                    command += "1»ses" + Session + "»" + DisplayName +  "»" + Helper.Base64Encode(Password) + "»" + IsDoctor;
+                    command += "1»ses" + Session + "»" + DisplayName + "»" + Helper.Base64Encode(Password) + "»" + IsDoctor;
                     break;
                 case CommandType.DATA:
                     command += "2»ses" + Session + "»" + Meting.ToCommand();

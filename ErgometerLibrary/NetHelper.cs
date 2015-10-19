@@ -29,10 +29,15 @@ namespace ErgometerLibrary
 
             if (client.Connected)
             {
-                StreamWriter wr = new StreamWriter(client.GetStream(), Encoding.Unicode);
-                wr.WriteLine(command);
-                Console.WriteLine("sent " + command);
-                wr.Flush();
+                try {
+                    StreamWriter wr = new StreamWriter(client.GetStream(), Encoding.Unicode);
+                    wr.WriteLine(command);
+                    wr.Flush();
+                }
+                catch(Exception e)
+                {
+                    return;
+                }
             }
         }
 
@@ -61,10 +66,15 @@ namespace ErgometerLibrary
             */
             if (client.Connected)
             {
-                StreamReader rd = new StreamReader(client.GetStream(), Encoding.Unicode);
-                string str = rd.ReadLine();
-                Console.WriteLine("rec " + str);
-                return str;
+                try {
+                    StreamReader rd = new StreamReader(client.GetStream(), Encoding.Unicode);
+                    string str = rd.ReadLine();
+                    return str;
+                }
+                catch(Exception e)
+                {
+                    return "";
+                }
             }
             else
                 return "";
