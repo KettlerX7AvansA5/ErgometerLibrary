@@ -99,7 +99,7 @@ namespace ErgometerLibrary
             Session = session;
             Timestamp = Helper.Now;
 
-            ChatMessage = chat;
+            ChatMessage = chat.Replace("\n", "");
         }
 
         //SETVALUE
