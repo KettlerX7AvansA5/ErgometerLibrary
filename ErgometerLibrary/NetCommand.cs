@@ -9,10 +9,10 @@ namespace ErgometerLibrary
     public class NetCommand
     {
         public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, VALUESET, USER, RESPONSE, REQUEST, LENGTH, SESSIONDATA, ERROR }
-        public enum RequestType { USERS, ALLSESSIONS, CURRENTSESSIONS, OLDDATA, SESSIONDATA }
+        public enum RequestType { USERS, ALLSESSIONS, OLDDATA, SESSIONDATA }
         public enum ResponseType { LOGINOK, LOGINWRONG, ERROR, NOTLOGGEDIN }
         public enum ValueType { TIME, POWER, ENERGY, DISTANCE }
-        public enum LengthType { USERS, SESSIONS, SESSIONDATA, DATA, CURRENTSESSIONS }
+        public enum LengthType { USERS, SESSIONS, SESSIONDATA, DATA }
 
         public double Timestamp { get; set; }
         public int Session { get; set; }
@@ -117,6 +117,7 @@ namespace ErgometerLibrary
             Type = CommandType.USER;
             Session = session;
             DisplayName = username;
+            Password = password;
         }
 
         //LOGIN
@@ -211,8 +212,6 @@ namespace ErgometerLibrary
                     return new NetCommand(LengthType.SESSIONS, int.Parse(args[1]), session);
                 case "data":
                     return new NetCommand(LengthType.DATA, int.Parse(args[1]), session);
-                case "currentsessions":
-                    return new NetCommand(LengthType.CURRENTSESSIONS, int.Parse(args[1]), session);
                 default:
                     throw new FormatException("Error in NetCommand: Length type not recognised");
             }
@@ -229,8 +228,6 @@ namespace ErgometerLibrary
                     return new NetCommand(RequestType.USERS, session);
                 case "allsessions":
                     return new NetCommand(RequestType.ALLSESSIONS, session);
-                case "currentsessions":
-                    return new NetCommand(RequestType.CURRENTSESSIONS, session);
                 case "olddata":
                     return new NetCommand(RequestType.OLDDATA, session);
                 case "sessiondata":
@@ -382,6 +379,9 @@ namespace ErgometerLibrary
                     break;
                 case CommandType.SESSIONDATA:
                     command += "11»ses" + Session + "»" + DisplayName;
+                    break;
+                case CommandType.ERROR:
+                    command += "ERROR IN NETCOMMAND";
                     break;
 
                 default:
