@@ -10,7 +10,7 @@ namespace ErgometerLibrary
     public class NetCommand
     {
         public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, VALUESET, USER, RESPONSE, REQUEST, LENGTH, SESSIONDATA, ERROR }
-        public enum RequestType { USERS, ALLSESSIONS, OLDDATA, SESSIONDATA }
+        public enum RequestType { USERS, ALLSESSIONS, OLDDATA, SESSIONDATA, CHAT }
         public enum ResponseType { LOGINOK, LOGINWRONG, ERROR, NOTLOGGEDIN }
         public enum ValueType { TIME, POWER, ENERGY, DISTANCE }
         public enum LengthType { USERS, SESSIONS, SESSIONDATA, DATA }
@@ -94,10 +94,11 @@ namespace ErgometerLibrary
         }
 
         //CHAT
-        public NetCommand(string chat, int session)
+        public NetCommand(string chat, bool isDoctor, int session)
         {
             Type = CommandType.CHAT;
             Session = session;
+            IsDoctor = isDoctor;
             Timestamp = Helper.Now;
 
             ChatMessage = chat.Replace("\n", "");
@@ -233,6 +234,8 @@ namespace ErgometerLibrary
                     return new NetCommand(RequestType.OLDDATA, session);
                 case "sessiondata":
                     return new NetCommand(RequestType.SESSIONDATA, session);
+                case "chat":
+                    return new NetCommand(RequestType.CHAT, session);
                 default:
                     throw new FormatException("Error in NetCommand: Request type not recognised");
             }
@@ -308,11 +311,12 @@ namespace ErgometerLibrary
 
         private static NetCommand ParseChatMessage(int session, string[] args)
         {
-            if (args.Length != 1)
+            if (args.Length != 2)
                 throw new MissingFieldException("Error in NetCommand: Chat Message is missing arguments");
 
             NetCommand temp = new NetCommand(CommandType.CHAT, session);
             temp.ChatMessage = args[0];
+            temp.IsDoctor = bool.Parse(args[1]);
 
             return temp;
         }
@@ -355,7 +359,7 @@ namespace ErgometerLibrary
                     command += "2»ses" + Session + "»" + Meting.ToCommand();
                     break;
                 case CommandType.CHAT:
-                    command += "3»ses" + Session + "»" + ChatMessage;
+                    command += "3»ses" + Session + "»" + ChatMessage + "»" + IsDoctor;
                     break;
                 case CommandType.LOGOUT:
                     command += "4»ses" + Session + "»logout";
