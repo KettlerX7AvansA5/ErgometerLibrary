@@ -70,7 +70,7 @@ namespace ErgometerLibrary
             string[] status = input.Split(delimiter);
             if (status.Length != 8 && status.Length != 9)
             {
-                return null;
+                throw new FormatException("Error in Meting: Arguments do not match");
             }
             int heartbeat = int.Parse(status[0]);
             int rpm = int.Parse(status[1]);

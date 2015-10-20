@@ -22,7 +22,7 @@ namespace ErgometerLibrary
         public ValueType Value { get; set; }
         public RequestType Request { get; set; }
         public LengthType Length { get; set; }
-        public double SetValue { get; set; }
+        public int SetValue { get; set; }
         public string DisplayName { get; set; }
         public bool IsDoctor { get; set; }
         public string Password { get; set; }
