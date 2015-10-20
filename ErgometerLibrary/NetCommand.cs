@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 
 namespace ErgometerLibrary
 {
@@ -38,11 +39,11 @@ namespace ErgometerLibrary
         }
 
         //SESSIONDATA
-        public NetCommand(string name, bool foo, int session)
+        public NetCommand(string name, double timestamp, int session)
         {
             Type = CommandType.SESSIONDATA;
             Session = session;
-            Timestamp = Helper.Now;
+            Timestamp = timestamp;
             DisplayName = name;
         }
 
@@ -189,10 +190,10 @@ namespace ErgometerLibrary
 
         private static NetCommand ParseSessionData(int session, string[] args)
         {
-            if (args.Length != 1)
+            if (args.Length != 2)
                 throw new MissingFieldException("Error in NetCommand: Session Data is missing arguments");
 
-            NetCommand temp = new NetCommand(args[0], false, session);
+            NetCommand temp = new NetCommand(args[0], double.Parse(args[1]), session);
 
             return temp;
         }
@@ -378,7 +379,7 @@ namespace ErgometerLibrary
                     command += "10»ses" + Session + "»" + Length.ToString().ToLower() + "»" + LengthValue;
                     break;
                 case CommandType.SESSIONDATA:
-                    command += "11»ses" + Session + "»" + DisplayName;
+                    command += "11»ses" + Session + "»" + DisplayName + "»" + Timestamp;
                     break;
                 case CommandType.ERROR:
                     command += "ERROR IN NETCOMMAND";
