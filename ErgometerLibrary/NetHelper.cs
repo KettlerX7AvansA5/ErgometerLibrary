@@ -9,17 +9,17 @@ namespace ErgometerLibrary
 {
     public class NetHelper
     {
-        public static void SendNetCommand(TcpClient client, NetCommand command)
+        public static bool SendNetCommand(TcpClient client, NetCommand command)
         {
             /*
             byte[] b = Encoding.Unicode.GetBytes(command.ToString());
             client.GetStream().Write(b, 0, b.Length);
             client.GetStream().Flush();
             */
-            SendString(client, command.ToString());
+            return SendString(client, command.ToString());
         }
 
-        public static void SendString(TcpClient client, string command)
+        public static bool SendString(TcpClient client, string command)
         {
             /*
             byte[] b = Encoding.Unicode.GetBytes(command);
@@ -27,18 +27,22 @@ namespace ErgometerLibrary
             client.GetStream().Flush();
             */
 
-            if (client.Connected)
+            if (client != null && client.Connected)
             {
-                try {
+                try
+                {
                     StreamWriter wr = new StreamWriter(client.GetStream(), Encoding.Unicode);
                     wr.WriteLine(command);
                     wr.Flush();
+                    return true;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    return;
+                    return false;
                 }
             }
+            else
+                return false;
         }
 
         public static NetCommand ReadNetCommand(TcpClient client)
@@ -74,7 +78,7 @@ namespace ErgometerLibrary
             string response = Encoding.Unicode.GetString(bytesFrom);
             return response;
             */
-            if (client.Connected)
+            if (client != null && client.Connected)
             {
                 try {
                     StreamReader rd = new StreamReader(client.GetStream(), Encoding.Unicode);
