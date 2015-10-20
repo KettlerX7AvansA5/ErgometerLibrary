@@ -52,7 +52,17 @@ namespace ErgometerLibrary
             */
 
             string str = ReadString(client);
-            NetCommand net = NetCommand.Parse(str);
+            NetCommand net;
+            if (str != "")
+                try {
+                    net = NetCommand.Parse(str);
+                }
+                catch(Exception e)
+                {
+                    net = new NetCommand(NetCommand.CommandType.ERROR, 0);
+                }
+            else
+                net = new NetCommand(NetCommand.CommandType.ERROR, 0);
             return net;
         }
 
