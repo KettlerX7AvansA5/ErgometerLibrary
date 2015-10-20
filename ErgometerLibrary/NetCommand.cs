@@ -9,7 +9,7 @@ namespace ErgometerLibrary
 {
     public class NetCommand
     {
-        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, VALUESET, USER, RESPONSE, REQUEST, LENGTH, SESSIONDATA, ERROR }
+        public enum CommandType { LOGIN, DATA, CHAT, LOGOUT, SESSION, VALUESET, USER, RESPONSE, REQUEST, LENGTH, SESSIONDATA, ERROR, BROADCAST }
         public enum RequestType { USERS, ALLSESSIONS, OLDDATA, SESSIONDATA, CHAT }
         public enum ResponseType { LOGINOK, LOGINWRONG, ERROR, NOTLOGGEDIN }
         public enum ValueType { TIME, POWER, ENERGY, DISTANCE }
@@ -104,6 +104,16 @@ namespace ErgometerLibrary
             ChatMessage = chat.Replace("\n", "");
         }
 
+        //BROADCAST
+        public NetCommand(string broadcast, int session)
+        {
+            Type = CommandType.BROADCAST;
+            Session = session;
+            Timestamp = Helper.Now;
+
+            ChatMessage = broadcast.Replace("\n", "");
+        }
+
         //SETVALUE
         public NetCommand(ValueType value, int val, int session)
         {
@@ -184,9 +194,21 @@ namespace ErgometerLibrary
                     return ParseLength(session, args);
                 case 11:
                     return ParseSessionData(session, args);
+                case 12:
+                    return ParseBroadcast(session, args);
                 default:
                     throw new FormatException("Error in NetCommand: " + comType + " is not a valid command type.");
             }
+        }
+
+        private static NetCommand ParseBroadcast(int session, string[] args)
+        {
+            if (args.Length != 1)
+                throw new MissingFieldException("Error in NetCommand: Broadcast Message is missing arguments");
+
+            NetCommand temp = new NetCommand(args[0], session);
+
+            return temp;
         }
 
         private static NetCommand ParseSessionData(int session, string[] args)
@@ -384,7 +406,9 @@ namespace ErgometerLibrary
                     break;
                 case CommandType.SESSIONDATA:
                     command += "11»ses" + Session + "»" + DisplayName + "»" + Timestamp;
-                    Console.WriteLine("Lib: " + command);
+                    break;
+                case CommandType.BROADCAST:
+                    command += "12»ses" + Session + "»" + ChatMessage;
                     break;
                 case CommandType.ERROR:
                     command += "ERROR IN NETCOMMAND";
