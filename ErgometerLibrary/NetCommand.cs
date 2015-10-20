@@ -380,6 +380,7 @@ namespace ErgometerLibrary
                     break;
                 case CommandType.SESSIONDATA:
                     command += "11»ses" + Session + "»" + DisplayName + "»" + Timestamp;
+                    Console.WriteLine("Lib: " + command);
                     break;
                 case CommandType.ERROR:
                     command += "ERROR IN NETCOMMAND";
