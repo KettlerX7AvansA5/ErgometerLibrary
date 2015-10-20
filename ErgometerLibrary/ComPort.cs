@@ -62,7 +62,7 @@ namespace ErgometerLibrary
                 }
                 catch(TimeoutException e)
                 {
-                    return "error";
+                    return "err";
                 }
             }
 
