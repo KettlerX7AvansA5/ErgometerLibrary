@@ -57,24 +57,27 @@ namespace ErgometerLibrary
 
             string str;
             NetCommand net;
-
-            try {
-                str = AESEncrypt.DecryptString(ReadString(client));
-            }
-            catch (Exception e)
-            {
-                str = "";
-                net = new NetCommand(NetCommand.CommandType.ERROR, 0);
-            }
+            str = ReadString(client);
 
             if (str != "")
+            { 
+                try
+                {
+                    str = AESEncrypt.DecryptString(str);
+                }
+                catch (Exception e)
+                {
+                    str = "";
+                    net = new NetCommand(NetCommand.CommandType.ERROR, 0);
+                }
                 try {
                     net = NetCommand.Parse(str);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     net = new NetCommand(NetCommand.CommandType.ERROR, 0);
                 }
+            }
             else
                 net = new NetCommand(NetCommand.CommandType.ERROR, 0);
             return net;
