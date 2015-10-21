@@ -32,7 +32,7 @@ namespace ErgometerLibrary
                 try
                 {
                     StreamWriter wr = new StreamWriter(client.GetStream(), Encoding.Unicode);
-                    wr.WriteLine(command);
+                    wr.WriteLine(AESEncrypt.EncryptToString(command));
                     wr.Flush();
                     return true;
                 }
@@ -55,8 +55,18 @@ namespace ErgometerLibrary
             return net;
             */
 
-            string str = ReadString(client);
+            string str;
             NetCommand net;
+
+            try {
+                str = AESEncrypt.DecryptString(ReadString(client));
+            }
+            catch (Exception e)
+            {
+                str = "";
+                net = new NetCommand(NetCommand.CommandType.ERROR, 0);
+            }
+
             if (str != "")
                 try {
                     net = NetCommand.Parse(str);

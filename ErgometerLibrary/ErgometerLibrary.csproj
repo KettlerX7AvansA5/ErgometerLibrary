@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AESEncrypt.cs" />
     <Compile Include="ChatMessage.cs" />
     <Compile Include="Chat\ChatItem.cs">
       <SubType>Component</SubType>
